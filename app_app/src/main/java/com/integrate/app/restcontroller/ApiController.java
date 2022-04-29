@@ -41,7 +41,7 @@ public class ApiController {
 	
 	public static String userKey = "$px`h";
 	
-	@GetMapping("/authenticate-with-dynamic-key")
+	@PostMapping("/authenticate-with-dynamic-key")
 	public String handshake(@RequestHeader("accept-key") String auth, Principal principal) {
 		User user = null;
 		if(principal != null) {
@@ -54,7 +54,7 @@ public class ApiController {
 		
 	}
 	
-	@GetMapping("/testing")
+	@PostMapping("/testing")
 	public ResponseEntity<?> testing(Principal principal){
 		if(principal != null) {
 			User user = userDetailsService.loadUserByUsername(principal.getName()).getUser();
