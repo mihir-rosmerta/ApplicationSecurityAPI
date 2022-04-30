@@ -42,6 +42,9 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private PasswordEncoder pbkdf2PasswordEncoder;
 	
+	@Autowired
+	private PasswordEncoder hmacSha1PasswordEncoder;
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.inMemoryAuthentication().passwordEncoder(bcryptPasswordEncoder)
@@ -56,6 +59,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter{
 			.withUser("user5").password(sha512PasswordEncoder.encode("user5pass")).roles("USER");
 		auth.inMemoryAuthentication().passwordEncoder(pbkdf2PasswordEncoder)
 			.withUser("user6").password(pbkdf2PasswordEncoder.encode("user6pass")).roles("USER");
+		auth.inMemoryAuthentication().passwordEncoder(hmacSha1PasswordEncoder)
+			.withUser("user7").password(hmacSha1PasswordEncoder.encode("user7pass")).roles("USER");
 	}
 
 	@Override

@@ -15,6 +15,7 @@ public class MyUserDetailsService implements UserDetailsService{
 	public static User user4 = null;
 	public static User user5 = null;
 	public static User user6 = null;
+	public static User user7 = null;
 	
 	
 	@Override
@@ -37,6 +38,9 @@ public class MyUserDetailsService implements UserDetailsService{
 		}
 		if(username.equals("user6")) {
 			userDetails = new UserDetailsImpl(user6);
+		}
+		if(username.equals("user7")) {
+			userDetails = new UserDetailsImpl(user7);
 		}
 		if(userDetails == null)throw new UsernameNotFoundException("Could not find user!");
 		return userDetails;

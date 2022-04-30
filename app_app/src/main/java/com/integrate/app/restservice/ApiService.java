@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.integrate.app.config.HmacSha1PasswordEncoder;
 import com.integrate.app.config.MD5PasswordEncoder;
 import com.integrate.app.config.MyUserDetailsService;
 import com.integrate.app.config.SHA1PasswordEncoder;
@@ -119,6 +120,11 @@ public class ApiService {
 		return new Pbkdf2PasswordEncoder();
 	}
 
+	@Bean
+	public PasswordEncoder hmacSha1PasswordEncoder() {
+		return new HmacSha1PasswordEncoder(); 
+	}
+	
 	public void createUsers() {
 		MyUserDetailsService.user1 = new User();
 		MyUserDetailsService.user1.setUsername("user1");
@@ -144,6 +150,11 @@ public class ApiService {
 		MyUserDetailsService.user6.setUsername("user6");
 		MyUserDetailsService.user6.setPasword(pbkdf2PasswordEncoder().encode("user6pass"));
 		MyUserDetailsService.user6.setKey(encrypt(ApiController.userKey));
+		MyUserDetailsService.user7 = new User();
+		MyUserDetailsService.user7.setUsername("user7");
+		MyUserDetailsService.user7.setPasword(hmacSha1PasswordEncoder().encode("user7pass"));
+		MyUserDetailsService.user7.setKey(encrypt(")od%3"));
+		
 	}
 	
 }
