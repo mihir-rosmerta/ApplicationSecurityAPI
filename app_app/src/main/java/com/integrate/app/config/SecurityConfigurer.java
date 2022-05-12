@@ -1,5 +1,7 @@
 package com.integrate.app.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -63,11 +68,24 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter{
 			.withUser("user7").password(hmacSha1PasswordEncoder.encode("user7pass")).roles("USER");
 	}
 
+	@Bean
+	protected CorsConfigurationSource corsConfigurationSource() 
+	{
+	    CorsConfiguration configuration = new CorsConfiguration();
+	    configuration.setAllowedOrigins(Arrays.asList("*"));
+	    configuration.setAllowedMethods(Arrays.asList("GET","POST","OPTIONS"));
+	    configuration.setAllowedHeaders(Arrays.asList("*"));
+	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	    source.registerCorsConfiguration("/**", configuration);
+	    return source;
+	}
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
+		http.cors().and()
+			.csrf().disable()
 			.authorizeRequests()
-			.antMatchers("/api/v1/authenticate").permitAll()
+			.antMatchers("/","/login_success","/api/v1/authenticate","/api/v1/auth2","/api/v1/auth3","/api/v1/alternateauth2").permitAll()
 			.anyRequest().authenticated().and()
 			.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 

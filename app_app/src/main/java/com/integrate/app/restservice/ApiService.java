@@ -2,8 +2,14 @@ package com.integrate.app.restservice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -85,6 +91,26 @@ public class ApiService {
         return salt.toString();
     }
 	
+	public static String decrypt(byte[] cipherText, SecretKey key, byte[] IV) throws Exception {
+	    // Get Cipher Instance
+	    Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+
+	    // Create SecretKeySpec
+	    SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
+
+	    // Create GCMParameterSpec
+	    GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128 , IV);
+
+	    // Initialize Cipher for DECRYPT_MODE
+	    cipher.init(Cipher.DECRYPT_MODE, keySpec, gcmParameterSpec);
+
+	    cipher.updateAAD("nvn".getBytes());
+	    byte[] decryptedText = cipher.doFinal(cipherText);
+
+	    return new String(decryptedText);
+	} 
+	
+	
 	@Bean
 	public MyUserDetailsService userDetailsService() {
 		return new MyUserDetailsService();
@@ -128,31 +154,31 @@ public class ApiService {
 	public void createUsers() {
 		MyUserDetailsService.user1 = new User();
 		MyUserDetailsService.user1.setUsername("user1");
-		MyUserDetailsService.user1.setPasword(bcryptPasswordEncoder().encode("user1pass"));
+		MyUserDetailsService.user1.setPassword(bcryptPasswordEncoder().encode("user1pass"));
 		MyUserDetailsService.user1.setKey(encrypt("$px`h"));
 		MyUserDetailsService.user2 = new User();
 		MyUserDetailsService.user2.setUsername("user2");
-		MyUserDetailsService.user2.setPasword(md5PasswordEncoder().encode("user2pass"));
+		MyUserDetailsService.user2.setPassword(md5PasswordEncoder().encode("user2pass"));
 		MyUserDetailsService.user2.setKey(encrypt("^az|f"));
 		MyUserDetailsService.user3 = new User();
 		MyUserDetailsService.user3.setUsername("user3");
-		MyUserDetailsService.user3.setPasword(sha1PasswordEncoder().encode("user3pass"));
+		MyUserDetailsService.user3.setPassword(sha1PasswordEncoder().encode("user3pass"));
 		MyUserDetailsService.user3.setKey(encrypt(ApiController.userKey));
 		MyUserDetailsService.user4 = new User();
 		MyUserDetailsService.user4.setUsername("user4");
-		MyUserDetailsService.user4.setPasword(sha256PasswordEncoder().encode("user4pass"));
+		MyUserDetailsService.user4.setPassword(sha256PasswordEncoder().encode("user4pass"));
 		MyUserDetailsService.user4.setKey(encrypt(ApiController.userKey));
 		MyUserDetailsService.user5 = new User();
 		MyUserDetailsService.user5.setUsername("user5");
-		MyUserDetailsService.user5.setPasword(sha512PasswordEncoder().encode("user5pass"));
+		MyUserDetailsService.user5.setPassword(sha512PasswordEncoder().encode("user5pass"));
 		MyUserDetailsService.user5.setKey(encrypt(ApiController.userKey));
 		MyUserDetailsService.user6 = new User();
 		MyUserDetailsService.user6.setUsername("user6");
-		MyUserDetailsService.user6.setPasword(pbkdf2PasswordEncoder().encode("user6pass"));
+		MyUserDetailsService.user6.setPassword(pbkdf2PasswordEncoder().encode("user6pass"));
 		MyUserDetailsService.user6.setKey(encrypt(ApiController.userKey));
 		MyUserDetailsService.user7 = new User();
 		MyUserDetailsService.user7.setUsername("user7");
-		MyUserDetailsService.user7.setPasword(hmacSha1PasswordEncoder().encode("user7pass"));
+		MyUserDetailsService.user7.setPassword(hmacSha1PasswordEncoder().encode("user7pass"));
 		MyUserDetailsService.user7.setKey(encrypt(")od%3"));
 		
 	}
